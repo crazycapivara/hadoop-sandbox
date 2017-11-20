@@ -1,6 +1,6 @@
 #!/bin/sh
-hdfs namenode -format
+bin/hdfs namenode -format
 sbin/start-dfs.sh
-hdfs dfs -mkdir /user
-hdfs dfs -mkdir /user/root
+bin/hdfs dfs -mkdir /user
+bin/hdfs dfs -mkdir /user/root
 
