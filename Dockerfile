@@ -10,14 +10,18 @@ RUN apt-get update \
 # Install hadoop
 RUN mkdir /hadoop-sandbox 
 WORKDIR /hadoop-sandbox
-RUN curl http://apache.lauf-forum.at/hadoop/common/hadoop-2.8.2/hadoop-2.8.2.tar.gz | tar xvz 
-RUN cd hadoop-2.8.2 \
-	&& sed -i s/'${JAVA_HOME}'/'\/docker-java-home'/g ./etc/hadoop/hadoop-env.sh
+RUN curl http://apache.lauf-forum.at/hadoop/common/hadoop-2.8.2/hadoop-2.8.2.tar.gz | tar xvz --strip 1 
+#RUN cd hadoop-2.8.2 && \
+RUN sed -i s/'${JAVA_HOME}'/'\/docker-java-home'/g ./etc/hadoop/hadoop-env.sh
 #COPY ./input /hadoop-sandbox/some-input
-
+COPY ./docker-entrypoint.sh /
+COPY ./config /hd-config
 #more ./etc/hadoop/hadoop-env.sh
 
 EXPOSE 50070
+#ENTRYPOINT ["/docker-entrypoint.sh"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["/bin/bash"]
 #ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa
 #cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 #chmod 0600 ~/.ssh/authorized_keys
