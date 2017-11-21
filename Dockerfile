@@ -2,11 +2,12 @@ FROM openjdk:7
 LABEL maintainer="Stefan Kuethe <crazycapivara@gmail.com>"
 
 # Environment variables
+ENV HADOOP_VERSION "2.8.2"
 #ENV MIRROR="http://apache.lauf-forum.at/hadoop/common/hadoop-2.8.2/hadoop-2.8.2.tar.gz"
-ENV MIRROR="http://mirror.netcologne.de/apache.org/hadoop/common/hadoop-2.8.2/hadoop-2.8.2.tar.gz"
-ENV INSTALL_DIR="/hadoop-sandbox"
+ENV MIRROR "http://mirror.netcologne.de/apache.org/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz"
+ENV HADOOP_HOME "/hadoop-sandbox"
 
-# Install ssh server in order to run hadoop on a single-node in a pseudo-distributed mode
+# Install ssh server in order to run hadoop in (pseudo-)distributed mode
 RUN apt-get update \
 	&& apt-get install -y openssh-server \
 	&& mkdir /var/run/sshd \
@@ -15,21 +16,18 @@ RUN apt-get update \
 	&& chmod 0600 ~/.ssh/authorized_keys
 
 # Install hadoop 
-RUN mkdir $INSTALL_DIR
-WORKDIR $INSTALL_DIR
-#RUN wget $MIRROR && archive=$(basename $MIRROR) \
-#	&& tar -xzf $archive --strip 1 \
-#	&& rm $archive
-# --- Same as above, but maybe slower, NEEDS TO BE CHECKED! ---
-RUN curl $MIRROR | tar -xz --strip 1  \
-	&& sed -i s/'${JAVA_HOME}'/'\/docker-java-home'/g ./etc/hadoop/hadoop-env.sh
-ENV PATH $INSTALL_DIR/bin:$PATH
+RUN mkdir $HADOOP_HOME \
+	&& curl $MIRROR | tar -xz --strip 1 -C $HADOOP_HOME \
+	&& sed -i s/'${JAVA_HOME}'/'\/docker-java-home'/g $HADOOP_HOME/etc/hadoop/hadoop-env.sh
+ENV PATH $HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
+WORKDIR $HADOOP_HOME
 
 # Add config files
 #COPY ./input /hadoop-sandbox/some-input
 COPY ./config /hd-config
-RUN cat /hd-config/set-hadoop-env-vars.sh >> /root/.bashrc \
-	&& cp /hd-config/*.xml $INSTALL_DIR/etc/hadoop/
+COPY ./set-up-and-start-dfs.sh /
+#RUN cat /hd-config/set-hadoop-env-vars.sh >> /root/.bashrc \
+#	&& cp /hd-config/*.xml $HADOOP_HOME/etc/hadoop/
 
 # Expose ports
 EXPOSE 50070 22
