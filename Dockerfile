@@ -14,6 +14,7 @@ RUN apt-get update \
 	&& ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa \
 	&& cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys \
 	&& chmod 0600 ~/.ssh/authorized_keys
+COPY ssh-config /root/.ssh/config
 
 # Install hadoop 
 RUN mkdir $HADOOP_HOME \
@@ -22,12 +23,10 @@ RUN mkdir $HADOOP_HOME \
 ENV PATH $HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
 WORKDIR $HADOOP_HOME
 
-# Add config files
-#COPY ./input /hadoop-sandbox/some-input
+# Add hadoop config and setup files
 COPY ./config /hd-config
 COPY ./set-up-and-start-dfs.sh /
-#RUN cat /hd-config/set-hadoop-env-vars.sh >> /root/.bashrc \
-#	&& cp /hd-config/*.xml $HADOOP_HOME/etc/hadoop/
+COPY ./examples $HADOOP_HOME/examples
 
 # Expose ports
 EXPOSE 50070 22
