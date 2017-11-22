@@ -23,7 +23,7 @@ RUN mkdir $HADOOP_HOME \
 	&& curl $MIRROR | tar -xz --strip 1 -C $HADOOP_HOME \
 	&& sed -i s/'${JAVA_HOME}'/'\/docker-java-home'/g $HADOOP_HOME/etc/hadoop/hadoop-env.sh \
 	&& echo "export HADOOP_HOME=$HADOOP_HOME" >> /root/.profile \
-	&& echo 'export PATH=$PATH:$HADOOP_HOME/bin' >> /root/.profile
+	&& echo 'export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin' >> /root/.profile
 ENV PATH $HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
 WORKDIR $HADOOP_HOME
 
