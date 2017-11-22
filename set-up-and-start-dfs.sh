@@ -1,5 +1,6 @@
-#!/bin/sh
-cp /hd-config/*.xml $HADOOP_HOME/etc/hadoop/
+#!/bin/bash
+cp /hd-config/core-site.xml $HADOOP_HOME/etc/hadoop/
+cp /hd-config/hdfs-site.xml $HADOOP_HOME/etc/hadoop/
 hdfs namenode -format
 start-dfs.sh
 hdfs dfs -mkdir /user

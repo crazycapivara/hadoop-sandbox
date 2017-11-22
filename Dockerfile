@@ -21,7 +21,10 @@ COPY ssh-config /root/.ssh/config
 # Install hadoop and set environment variables
 RUN mkdir $HADOOP_HOME \
 	&& curl $MIRROR | tar -xz --strip 1 -C $HADOOP_HOME \
-	&& sed -i s/'${JAVA_HOME}'/'\/docker-java-home'/g $HADOOP_HOME/etc/hadoop/hadoop-env.sh \
+	&& sed -i s/'${JAVA_HOME}'/'\/docker-java-home'/g $HADOOP_HOME/etc/hadoop/hadoop-env.sh
+
+# Set hadoop environment variables
+RUN echo "export HADOOP_VERSION=$HADOOP_VERSION" >> /root/.profile \
 	&& echo "export HADOOP_HOME=$HADOOP_HOME" >> /root/.profile \
 	&& echo 'export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin' >> /root/.profile
 ENV PATH $HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
@@ -30,11 +33,15 @@ WORKDIR $HADOOP_HOME
 # Add hadoop config and setup files
 COPY ./config /hd-config
 COPY ./set-up-and-start-dfs.sh /
+COPY ./set-up-and-start-yarn.sh /
 COPY ./examples $HADOOP_HOME/examples
 
 # Expose ports
 ## hdfs
 EXPOSE 50090 50075 50070 9000
+
+## yarn
+EXPOSE 8088 8042
 
 ## ssh
 EXPOSE 22
