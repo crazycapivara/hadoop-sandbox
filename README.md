@@ -50,6 +50,7 @@ $ docker run --rm -it -e START_DFS=yes crazycapivara/hadoop
 
 ## environment variables
 
+```
 - `START_DFS` set to `yes` to set up HDFS and run hadoop's `start-dfs.sh` (defaults to `no`)
 - `START_YARN` set to `yes` to set up YARN and run hadoop's `start-yarn.sh` (defaults to `no`)
 ```
