@@ -31,11 +31,18 @@ $ docker build -t crazycapivara/hadoop .
 # check version
 $ docker run --rm crazycapivara/hadoop hadoop version
 
-# run MapReduce example
+# run MapReduce example locally as standalone operation
 $ docker run --rm crazycapivara/hadoop examples/map-reduce.sh
 
-# start dfs and run MapReduce example
+# start dfs and run MapReduce example locally as pseudo-distributed operation
 $ docker run --rm -e START_DFS=yes crazycapivara/hadoop examples/map-reduce.sh
+
+# start dfs and YARN
+# and run MapReduce example as pseudo-distributed operation on YARN
+$ docker run --rm -P \
+    -e START_DFS=yes \
+    -e START_YARN=yes \
+    crazycapivara/hadoop examples/map-reduce.sh
 
 # start dfs and an interactive bash session
 $ docker run --rm -it -e START_DFS=yes crazycapivara/hadoop
@@ -45,16 +52,6 @@ $ docker run --rm -it -e START_DFS=yes crazycapivara/hadoop
 
 - `START_DFS` set to `yes` to set up HDFS and run hadoop's `start-dfs.sh` (defaults to `no`)
 - `START_YARN` set to `yes` to set up YARN and run hadoop's `start-yarn.sh` (defaults to `no`)
-
-```bash
-# start dfs only
-$ docker run --rm -P -e START_DFS=yes crazycapivara/hadoop
-
-# start dfs and yarn and run MapReduce example
-$ docker run --rm -P \
-    -e START_DFS=yes \
-    -e START_YARN=yes \
-    crazycapivara/hadoop examples/map-reduce.sh
 ```
 
 ## ssh
