@@ -2,13 +2,24 @@
 
 run hadoop inside a docker container
 
+out of the box you can run hadoop in
+
+- non-distributed or
+- pseudo disributed
+
+mode and run a MapReduce job either locally or on YARN as documented here:
+
+- [hadoop docs single cluster](https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/SingleCluster.html)
+
+It should also be possible to run multiple containers to set up fully-distributed clusters (generally by adjusting the config files), but I did not test it yet.
+
 ## build
 
 ```bash
 # with url
 $ docker build -t crazycapivara/hadoop github.com/crazycapivara/hadoop-sandbox
 
-# after pull
+# or after pull
 $ docker build -t crazycapivara/hadoop . 
 ```
 
@@ -18,7 +29,10 @@ $ docker build -t crazycapivara/hadoop .
 # check version
 $ docker run --rm crazycapivara/hadoop hadoop version
 
-# start dfs and run example
+# run MapReduce example
+$ docker run --rm crazycapivara/hadoop examples/map-reduce.sh
+
+# start dfs and run MapReduce example
 $ docker run --rm -e START_DFS=yes crazycapivara/hadoop examples/map-reduce.sh
 
 # start dfs and an interactive bash session
@@ -27,14 +41,14 @@ $ docker run --rm -it -e START_DFS=yes crazycapivara/hadoop
 
 ## environment variables
 
-- `START_DFS` defaults to `no`
-- `START_YARN` defaults to `no`
+- `START_DFS` set to `yes` to set up dfs and run hadoop's `start-dfs.sh` (defaults to `no`)
+- `START_YARN` set to `yes` to set up yarn and run hadoop's `start-yarn.sh` (defaults to `no`)
 
 ```bash
 # start dfs only
-$ docker run --rm -P -e START_DFS=yes crazycapivara/hadoop examples/map-reduce.sh
+$ docker run --rm -P -e START_DFS=yes crazycapivara/hadoop
 
-# start dfs and yarn
+# start dfs and yarn and run MapReduce example
 $ docker run --rm -P \
     -e START_DFS=yes \
     -e START_YARN=yes \
