@@ -2,8 +2,7 @@ FROM openjdk:7
 LABEL maintainer="Stefan Kuethe <crazycapivara@gmail.com>"
 
 # Environment variables
-ENV HADOOP_VERSION "2.8.2"
-#ENV MIRROR="http://apache.lauf-forum.at/hadoop/common/hadoop-2.8.2/hadoop-2.8.2.tar.gz"
+ENV HADOOP_VERSION "2.9.0"
 ENV MIRROR "http://mirror.netcologne.de/apache.org/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz"
 ENV HADOOP_PREFIX "/hadoop-sandbox"
 
