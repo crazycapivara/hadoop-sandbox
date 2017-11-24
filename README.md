@@ -23,6 +23,21 @@ $ docker build -t crazycapivara/hadoop github.com/crazycapivara/hadoop-sandbox
 
 # or after pull
 $ docker build -t crazycapivara/hadoop . 
+
+# older version
+$ docker build -f Dockerfile-hadoop-2.8.2 -t crazycapivara/hadoop:2.8.2 .
+```
+
+to build other versions you can set the environment variable `HADOOP_VERSION` in the `Dockerfile`
+
+## pull
+
+```bash
+# latest
+$ docker pull crazycapivara/hadoop
+
+# older version (check available tags)
+$ docker pull crazycapivara/hadoop:2.8.2
 ```
 
 ## run
@@ -34,17 +49,17 @@ $ docker run --rm crazycapivara/hadoop hadoop version
 # run MapReduce example locally as standalone operation
 $ docker run --rm crazycapivara/hadoop examples/map-reduce.sh
 
-# start dfs and run MapReduce example locally as pseudo-distributed operation
+# start HDFS and run MapReduce example locally as pseudo-distributed operation
 $ docker run --rm -e START_DFS=yes crazycapivara/hadoop examples/map-reduce.sh
 
-# start dfs and YARN
+# start HDFS and YARN
 # and run MapReduce example as pseudo-distributed operation on YARN
 $ docker run --rm -P \
     -e START_DFS=yes \
     -e START_YARN=yes \
     crazycapivara/hadoop examples/map-reduce.sh
 
-# start dfs and an interactive bash session
+# start HDFS and an interactive bash session
 $ docker run --rm -it -e START_DFS=yes crazycapivara/hadoop
 ```
 
